@@ -1,25 +1,18 @@
-import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import styles from "./App.module.css";
+import {CommentsList} from "./components/CommentsList";
 
 function App() {
     return (
-        <div className="App">
-            <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
-                <p>
-                    Edit <code>src/App.tsx</code> and save to reload.
-                </p>
-                <a
-                    className="App-link"
-                    href="https://reactjs.org"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Learn React
-                </a>
-            </header>
-        </div>
+        <>
+            <div className={styles.header}>
+                <div className={styles["total-comments"]}>267 комментариев</div>
+                <div className={styles["total-likes-wrapper"]}>
+                    <img src="heart.svg" alt="like" />
+                    <div className={styles["total-likes"]}>8632</div>
+                </div>
+            </div>
+            <CommentsList data={data} />
+        </>
     );
 }
 
