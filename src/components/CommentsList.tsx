@@ -63,17 +63,17 @@ export const CommentsList = () => {
           {totalComments} {totalCommentsPluralized}
         </div>
         <Likes
-          totalLikes={queryComments.data.data.reduce(
+          likes={queryComments.data.data.reduce(
             (sum: number, comment) => sum + comment.likes,
             0,
           )}
         />
       </div>
-      {/* <div className={styles["comments-list"]}>
+      <div className={styles["comments-list"]}>
         {queryComments.data.data.map((comment) => (
           <Comment data={} />
         ))}
-      </div> */}
+      </div>
     </>
   );
 };
