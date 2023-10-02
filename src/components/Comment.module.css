@@ -1,0 +1,40 @@
+.comment {
+  margin-bottom: 24px;
+}
+
+.comment-data-wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.author-wrapper {
+  display: flex;
+  gap: 20px;
+}
+
+.avatar {
+  display: block;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.author {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.name {
+  font-weight: 700;
+}
+
+.created {
+  color: #8297ab;
+}
+
+.message {
+  margin-left: 60px;
+}
