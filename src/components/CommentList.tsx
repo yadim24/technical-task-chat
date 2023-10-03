@@ -1,5 +1,5 @@
-import {useQuery} from "@tanstack/react-query";
-import {useState} from "react";
+import {useInfiniteQuery, useQuery} from "@tanstack/react-query";
+import {Fragment} from "react";
 import getAuthorsRequest from "src/api/authors/getAuthorsRequest";
 import getCommentsRequest from "src/api/comments/getCommentsRequest";
 import {pluralize} from "src/lib/pluralize";
@@ -22,6 +22,12 @@ type TComment = {
   likes: number;
 };
 
+type TFirstAnswers = TComment & {answers: TComment[] | null};
+
+type TCommentList = {
+  [key: number]: TFirstAnswers;
+};
+
 type TCommentsDto = {
   pagination: TPagination;
   data: TComment[];
@@ -40,31 +46,80 @@ interface TAuthors {
   };
 }
 
-export const CommentList = () => {
-  const [page, setPage] = useState(1);
+const transformData = (data: TCommentsDto) => {
+  const commentsData = data.data.filter((comment) => !comment.parent);
 
+  const answersData = data.data.filter((comment) => comment.parent);
+  // .sort((a, b) => a.id - b.id);
+
+  let commentListWithAnswers: TFirstAnswers[] = [];
+
+  commentsData.forEach((comment) => {
+    commentListWithAnswers.push({
+      ...comment,
+      answers: answersData.filter((answer) => answer.parent === comment.id),
+    });
+  });
+
+  let commentList: TCommentList = commentListWithAnswers.reduce(
+    (commentListObj, comment) => {
+      return {...commentListObj, [comment.id]: comment};
+    },
+    {},
+  );
+
+  answersData.forEach((answer) => {
+    for (let key in commentList) {
+      const commentWithAnswers = commentList[key].answers?.find(
+        (anyAnswer) => anyAnswer.id === answer.parent,
+      );
+
+      if (commentWithAnswers) commentList[key].answers?.push(answer);
+    }
+  });
+
+  let newCommentList = [];
+
+  for (let key in commentList) {
+    newCommentList.push(commentList[key]);
+  }
+
+  const newData = {
+    pagination: data.pagination,
+    data: newCommentList,
+  };
+
+  return newData;
+};
+
+export const CommentList = () => {
   const queryAuthors = useQuery<TAuthor[], unknown, TAuthor[], string[]>({
     queryKey: ["authors"],
     queryFn: () => getAuthorsRequest(),
   });
 
-  const queryComments = useQuery<
+  const queryComments = useInfiniteQuery<
     TCommentsDto,
     unknown,
     TCommentsDto,
-    (string | {page: number})[]
+    string[]
   >({
-    queryKey: ["comments", {page}],
-    queryFn: () => getCommentsRequest(page),
+    queryKey: ["comments"],
+    queryFn: ({pageParam = 1}) => getCommentsRequest(pageParam),
+    getNextPageParam: (lastPage) => {
+      if (lastPage.pagination.page < lastPage.pagination.total_pages)
+        return lastPage.pagination.page + 1;
+    },
   });
 
   if (!queryComments.data) return null;
 
   if (!queryAuthors.data) return null;
 
-  const totalComments =
-    queryComments.data.pagination.size *
-    queryComments.data.pagination.total_pages;
+  const totalComments = queryComments.data.pages.reduce(
+    (sum, page) => sum + page.pagination.size,
+    0,
+  );
 
   const totalCommentsPluralized = pluralize(totalComments, [
     "комментарий",
@@ -76,6 +131,8 @@ export const CommentList = () => {
     return {...newAuthors, [author.id]: author};
   }, {});
 
+  console.log(transformData(queryComments.data.pages[0]));
+
   return (
     <div className={styles["comments-container"]}>
       <div className={styles.header}>
@@ -83,26 +140,43 @@ export const CommentList = () => {
           {totalComments} {totalCommentsPluralized}
         </div>
         <Likes
-          likes={queryComments.data.data.reduce(
-            (sum: number, comment) => sum + comment.likes,
+          likes={queryComments.data.pages.reduce(
+            (sumTotal, page) =>
+              sumTotal +
+              page.data.reduce((sumPage, comment) => {
+                if (comment.parent) return sumPage;
+                return sumPage + comment.likes;
+              }, 0),
             0,
           )}
         />
       </div>
       <hr className={styles.line} />
       <div className={styles["comments-list"]}>
-        {queryComments.data.data.map((comment) => (
-          <Comment
-            date={comment.created}
-            likes={comment.likes}
-            text={comment.text}
-            author={authors[comment.author].name}
-            avatar={authors[comment.author].avatar}
-          />
+        {queryComments.data.pages.map((page) => (
+          <Fragment key={page.pagination.page}>
+            {page.data.map((comment) => (
+              <Comment
+                key={comment.id}
+                date={comment.created}
+                likes={comment.likes}
+                text={comment.text}
+                author={authors[comment.author].name}
+                avatar={authors[comment.author].avatar}
+              />
+            ))}
+          </Fragment>
         ))}
-        h
       </div>
-      <button className={styles["next-page"]}>Загрузить еще</button>
+      {queryComments.hasNextPage && (
+        <button
+          className={styles["next-page"]}
+          onClick={() => queryComments.fetchNextPage()}
+          disabled={queryComments.isFetchingNextPage}
+        >
+          Загрузить еще
+        </button>
+      )}
     </div>
   );
 };
