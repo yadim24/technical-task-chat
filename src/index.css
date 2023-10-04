@@ -1,16 +1,23 @@
 html,
 body {
-    height: 100vh;
+  height: 100vh;
 }
 
 body {
-    margin: 0;
-    background-image: url("/public/background1.png"),
-        linear-gradient(0deg, #101f25 0%, #101f25 100%);
-    background-position: top;
-    background-repeat: no-repeat;
-    background-size: cover;
-    font-size: 14px;
-    font-family: "Lato", sans-serif;
-    color: #fff;
+  margin: 0;
+  background-image: url("/public/background1.png"),
+    linear-gradient(0deg, #101f25 0%, #101f25 100%);
+  background-position: top;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  font-size: 14px;
+  font-family: "Lato", sans-serif;
+  color: #fff;
+}
+
+@media (min-width: 500px) {
+  body {
+    font-size: 16px;
+  }
 }

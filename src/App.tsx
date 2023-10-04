@@ -1,10 +1,13 @@
-import {QueryProvider} from "./QueryProvider";
 import {CommentList} from "./components/CommentList";
+import {LikeStateProvider} from "./providers/LikeStateProvider";
+import {QueryProvider} from "./providers/QueryProvider";
 
 function App() {
   return (
     <QueryProvider>
-      <CommentList />
+      <LikeStateProvider>
+        <CommentList />
+      </LikeStateProvider>
     </QueryProvider>
   );
 }

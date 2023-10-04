@@ -1,7 +1,7 @@
 .comments-container {
   display: flex;
   flex-direction: column;
-  min-width: 320px;
+  margin: auto;
   padding: 32px 24px;
 }
 
@@ -10,9 +10,25 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
+  z-index: 99;
 }
 
 .total-comments {
+  font-weight: 700;
+}
+
+.total-likes-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.heart {
+  width: 20px;
+  height: 20px;
+}
+
+.total-likes {
   font-weight: 700;
 }
 
@@ -33,4 +49,21 @@
   line-height: 22px;
   color: #fff;
   border: none;
+  cursor: pointer;
+}
+
+.next-page:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+@media (min-width: 500px) {
+  .comments-container {
+    max-width: 562px;
+  }
+
+  .heart {
+    width: 22px;
+    height: 22px;
+  }
 }

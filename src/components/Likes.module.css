@@ -1,9 +1,27 @@
-.total-likes-wrapper {
+.likes-wrapper {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.total-likes {
+.heart {
+  width: 20px;
+  height: 20px;
+}
+
+.likes {
   font-weight: 700;
+}
+
+.liked {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+@media (min-width: 500px) {
+  .heart {
+    width: 22px;
+    height: 22px;
+  }
 }
