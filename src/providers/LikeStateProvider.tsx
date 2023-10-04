@@ -1,5 +1,5 @@
 import {ReactElement, ReactNode, useState} from "react";
-import {LikeStateContext} from "src/context/LikeStateContext";
+import {LikeStateContext} from "src/contexts/LikeStateContext";
 
 export const LikeStateProvider = ({
   children,

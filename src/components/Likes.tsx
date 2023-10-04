@@ -1,5 +1,5 @@
 import {FC, useContext} from "react";
-import {LikeStateContext} from "src/context/LikeStateContext";
+import {LikeStateContext} from "src/contexts/LikeStateContext";
 import {invariant} from "src/lib/invariant";
 import styles from "./Likes.module.css";
 

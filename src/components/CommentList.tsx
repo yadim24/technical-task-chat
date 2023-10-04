@@ -2,7 +2,7 @@ import {InfiniteData, useInfiniteQuery, useQuery} from "@tanstack/react-query";
 import {Fragment, useContext} from "react";
 import getAuthorsRequest from "src/api/authors/getAuthorsRequest";
 import getCommentsRequest from "src/api/comments/getCommentsRequest";
-import {LikeStateContext} from "src/context/LikeStateContext";
+import {LikeStateContext} from "src/contexts/LikeStateContext";
 import {invariant} from "src/lib/invariant";
 import {pluralize} from "src/lib/pluralize";
 import {Comment} from "./Comment";
