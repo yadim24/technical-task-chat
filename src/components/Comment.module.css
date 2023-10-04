@@ -2,6 +2,10 @@
   margin-bottom: 24px;
 }
 
+.comment-child {
+  padding-left: 20px;
+}
+
 .comment-data-wrapper {
   display: flex;
   justify-content: space-between;
@@ -38,4 +42,11 @@
 .message {
   margin-left: 60px;
   overflow-wrap: break-word;
+}
+
+@media (min-width: 500px) {
+  .avatar {
+    width: 68px;
+    height: 68px;
+  }
 }

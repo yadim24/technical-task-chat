@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import {FC} from "react";
 import {formatDate} from "src/lib/formatDate";
 import {pluralize} from "src/lib/pluralize";
@@ -10,9 +11,19 @@ type Props = {
   date: string;
   likes: number;
   text: string;
+  isChild: boolean;
+  commentId: number;
 };
 
-export const Comment: FC<Props> = ({author, avatar, date, likes, text}) => {
+export const Comment: FC<Props> = ({
+  author,
+  avatar,
+  date,
+  likes,
+  text,
+  isChild,
+  commentId,
+}) => {
   const diffTime = (date: string) => {
     const currentTime = new Date();
     const difference = Math.round(
@@ -38,7 +49,7 @@ export const Comment: FC<Props> = ({author, avatar, date, likes, text}) => {
   };
 
   return (
-    <div className={styles.comment}>
+    <div className={clsx(styles.comment, {[styles["comment-child"]]: isChild})}>
       <div className={styles["comment-data-wrapper"]}>
         <div className={styles["author-wrapper"]}>
           <img className={styles.avatar} src={avatar} alt="Avatar" />
@@ -47,7 +58,7 @@ export const Comment: FC<Props> = ({author, avatar, date, likes, text}) => {
             <div className={styles.created}>{diffTime(date)}</div>
           </div>
         </div>
-        <Likes likes={likes} />
+        <Likes likes={likes} id={commentId} />
       </div>
       <div className={styles.message}>{text}</div>
     </div>
